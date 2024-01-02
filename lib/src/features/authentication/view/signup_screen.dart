@@ -80,11 +80,12 @@ class SignupScreen extends StatelessWidget {
                                   fontWeight: FontWeight.bold)),
                           const SizedBox(height: 20),
                           TextFormFieldWidget(
-                            controller: authProvider.emailController,
+                            controller: authProvider.nameController,
                             labelText: 'Enter Your Full Name',
                             hintText: 'Full Name',
                             required: true,
-                            textInputType: TextInputType.emailAddress,
+                            textInputType: TextInputType.name,
+                            textCapitalization: TextCapitalization.words
                           ),
                           const SizedBox(height: 20),
                           TextFormFieldWidget(
@@ -96,11 +97,34 @@ class SignupScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 20),
                           TextFormFieldWidget(
+                            controller: authProvider.phoneController,
+                            labelText: 'Enter Your Phone Number',
+                            hintText: 'Phone Number',
+                            textInputType: TextInputType.phone,
+                          ),
+                          const SizedBox(height: 20),
+                          TextFormFieldWidget(
                             controller: authProvider.passwordController,
                             obscure: true,
                             labelText: 'Enter Password',
                             hintText: 'Password',
                             required: true,
+                          ),
+                          const SizedBox(height: 20),
+                          TextFormFieldWidget(
+                            controller: authProvider.confirmPasswordController,
+                            obscure: true,
+                            labelText: 'Enter Confirm Password',
+                            hintText: 'Confirm Password',
+                            required: true,
+                          ),
+                          const SizedBox(height: 20),
+                          TextFormFieldWidget(
+                            controller: authProvider.addressController,
+                            labelText: 'Enter Address',
+                            hintText: 'Address',
+                            minLine: 1,
+                            maxLine: 3,
                           ),
                           const SizedBox(height: 20),
 

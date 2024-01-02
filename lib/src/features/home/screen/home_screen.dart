@@ -1,3 +1,4 @@
+import 'package:bdhs_rider_app/core/widgets/shimmer_widget.dart';
 import 'package:flutter/Material.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +19,14 @@ class HomeScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-          body: Column(
+          body: homeProvider.initialLoading
+              ? ShimmerWidget(child: _bodyUI(context, homeProvider, size))
+              : _bodyUI(context, homeProvider, size)),
+    );
+  }
+
+  Widget _bodyUI(BuildContext context, HomeProvider homeProvider, Size size) =>
+      Column(
         children: [
           ///Header
           Stack(
@@ -130,7 +138,8 @@ class HomeScreen extends StatelessWidget {
                           onTap: () {
                             Navigator.pushNamed(context, AppRouter.orderList);
                           },
-                          leadingAsset: 'assets/images/home/processing_order.png',
+                          leadingAsset:
+                              'assets/images/home/processing_order.png',
                           title: '0012',
                           subtitle: 'Processing Order',
                           titleColor: AppColor.secondaryColor,
@@ -196,7 +205,5 @@ class HomeScreen extends StatelessWidget {
             ),
           )
         ],
-      )),
-    );
-  }
+      );
 }

@@ -17,10 +17,12 @@ class AuthenticationProvider extends ChangeNotifier {
   final GlobalKey<FormState> signupFormKey = GlobalKey();
   final GlobalKey<FormState> signInFormKey = GlobalKey();
 
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
-  final TextEditingController nameController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
 
   bool rememberMe = true;
   bool privacyPolicyUrl = true;
@@ -51,9 +53,6 @@ class AuthenticationProvider extends ChangeNotifier {
   }
 
   Future<void> signupButtonOnTap() async {
-    Navigator.pushNamedAndRemoveUntil(
-        AppNavigatorKey.key.currentState!.context, AppRouter.home, (route) => false);
-    return;
     if (!signupFormKey.currentState!.validate()) {
       return;
     }
@@ -75,13 +74,23 @@ class AuthenticationProvider extends ChangeNotifier {
     }
     loading = true;
     notifyListeners();
+
+    final String? fcmToken = await _authRepository.generateUserToken();
+
+    if(fcmToken==null){
+      loading = false;
+      notifyListeners();
+      showToast('Error getting device token');
+      return;
+    }
     Map<String, dynamic> requestBody = {
-      "email": emailController.text,
       "name": nameController.text,
+      "email": emailController.text,
+      "mobileNumber": phoneController.text,
       "password": passwordController.text,
       "password_confirmation": confirmPasswordController.text,
-      "device_name": "Dev1@CF"
-    };
+      "address": addressController.text,
+      "device_id": fcmToken};
 
     await _authRepository.signup(requestBody: requestBody).then((response) {
       loading = false;
@@ -94,9 +103,6 @@ class AuthenticationProvider extends ChangeNotifier {
   }
 
   Future<void> signInButtonOnTap() async {
-    Navigator.pushNamedAndRemoveUntil(
-        AppNavigatorKey.key.currentState!.context, AppRouter.home, (route) => false);
-    return;
     if (!signInFormKey.currentState!.validate()) {
       return;
     }
@@ -112,11 +118,8 @@ class AuthenticationProvider extends ChangeNotifier {
     notifyListeners();
 
     Map<String, dynamic> requestBody = {
-      "email": emailController.text,
-      "password": passwordController.text,
-      "device_name": "Dev1@CF",
-      "remember": false
-    };
+      "username": emailController.text,
+      "password": passwordController.text};
 
     await _authRepository.signIn(requestBody: requestBody).then(
         (LoginResponseModel? response) async {
@@ -124,13 +127,11 @@ class AuthenticationProvider extends ChangeNotifier {
         await setData(LocalStorageKey.loginResponseKey,
                 loginResponseModelToJson(response))
             .then((value) async {
-          final BuildContext context =
-              AppNavigatorKey.key.currentState!.context;
-
-          ApiService.instance.addAccessToken(response.accessToken);
+          final BuildContext context = AppNavigatorKey.key.currentState!.context;
+          ApiService.instance.addToken(response.token!);
           clearAllData();
-          // Navigator.pushNamedAndRemoveUntil(
-          //     context, AppRouter.tabBar, (route) => false);
+          Navigator.pushNamedAndRemoveUntil(
+              context, AppRouter.home, (route) => false);
         }, onError: (error) {
           showToast(error.toString());
         });
