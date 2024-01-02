@@ -35,21 +35,13 @@ class AuthenticationProvider extends ChangeNotifier {
     passwordController.clear();
     confirmPasswordController.clear();
     nameController.clear();
+    addressController.clear();
+    phoneController.clear();
   }
 
   void clearPassword() {
     passwordController.clear();
     confirmPasswordController.clear();
-  }
-
-  void rememberMeOnChange(bool value) {
-    rememberMe = value;
-    notifyListeners();
-  }
-
-  void privacyPolicyUrlOnChange(bool value) {
-    privacyPolicyUrl = value;
-    notifyListeners();
   }
 
   Future<void> signupButtonOnTap() async {

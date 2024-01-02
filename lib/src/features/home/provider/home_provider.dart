@@ -17,10 +17,8 @@ class HomeProvider extends ChangeNotifier {
   Future<void> initializeData() async {
     initialLoading=true;
     notifyListeners();
-
     await getLocalData();
     await getDashboardData();
-
     initialLoading=false;
     notifyListeners();
   }
