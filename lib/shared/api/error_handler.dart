@@ -10,14 +10,14 @@ class ErrorHandler {
     } else if (exception is ApiNotRespondingException) {
       showToast(exception.message!);
     } else if (exception is UnauthorizedException) {
-      //If access token has un authorised then logout
+      //If access token has unauthorised then logout
       if (ApiService.instance.token.isNotEmpty) {
         await AuthRepository().logout();
         showToast(exception.message!);
       }
-      showToast(exception.message!);
     } else if (exception is InvalidCredentialsException) {
       showToast(exception.message!);
+
     } else if (exception is BadRequestException) {
       showToast(exception.message!);
     } else if (exception is ExpectationException) {

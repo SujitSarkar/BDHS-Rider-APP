@@ -14,12 +14,19 @@ class HomeProvider extends ChangeNotifier {
   ///User Data
   LoginResponseModel? loginResponseModel;
 
+  ///Dashboard Data
+  Map<String, double> orderPieChartDataMap = {
+    "Total": 0.0,
+    "Complete": 0.0,
+    "Processing": 0.0
+  };
+
   Future<void> initializeData() async {
-    initialLoading=true;
+    initialLoading = true;
     notifyListeners();
     await getLocalData();
     await getDashboardData();
-    initialLoading=false;
+    initialLoading = false;
     notifyListeners();
   }
 
@@ -37,6 +44,16 @@ class HomeProvider extends ChangeNotifier {
     await _homeRepository.dashboardData().then((result) {
       if (result != null) {
         dashboardDataModel = result;
+        orderPieChartDataMap = {
+          "Total": double.parse(
+                  '${dashboardDataModel?.data?.rideComplete ?? '0.0'}') +
+              double.parse(
+                  '${dashboardDataModel?.data?.processingOrder ?? '0.0'}'),
+          "Complete": double.parse(
+              '${dashboardDataModel?.data?.rideComplete ?? '0.0'}'),
+          "Processing": double.parse(
+              '${dashboardDataModel?.data?.processingOrder ?? '0.0'}')
+        };
       }
     });
   }

@@ -77,6 +77,7 @@ class ApiService {
   dynamic _processResponse(var response) {
     debugPrint('url:- ${response.request?.url}');
     debugPrint('statusCode:- ${response.statusCode}');
+    debugPrint('response:- ${response.body.toString()}');
     debugPrint('Token:- $token');
     // debugPrint('response:- ${response.body}');
 

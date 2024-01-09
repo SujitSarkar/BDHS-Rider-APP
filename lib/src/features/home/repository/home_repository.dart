@@ -15,6 +15,7 @@ class HomeRepository{
       result = dashboardDataModelFromJson(response.body);
     }, onError: (error) {
       debugPrint(error.message ?? 'Something went wrong');
+
     });
     return result;
   }
