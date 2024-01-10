@@ -1,15 +1,25 @@
 import 'package:flutter/Material.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/constants/app_color.dart';
 import '../../../../core/constants/text_size.dart';
 import '../../../../core/widgets/solid_button.dart';
+import '../../home/provider/home_provider.dart';
+import '../model/order_list_data_model.dart';
+import '../provider/order_provider.dart';
 import '../tile/order_details_tile.dart';
 
 class OrderDetailsScreen extends StatelessWidget {
-  const OrderDetailsScreen({super.key});
+  const OrderDetailsScreen(
+      {super.key, required this.orderModel, required this.orderType});
+
+  final OrderListDataModel orderModel;
+  final String orderType;
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    final OrderProvider orderProvider = Provider.of(context);
+    final HomeProvider homeProvider = Provider.of(context);
     return SafeArea(
         child: Scaffold(
       body: Column(
@@ -50,9 +60,9 @@ class OrderDetailsScreen extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
-                                    'Mr. Steven',
-                                    style: TextStyle(
+                                   Text(
+                                    '${homeProvider.loginResponseModel?.user?.name ?? 'N/A'}',
+                                    style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: TextSize.bodyText,
                                         fontWeight: FontWeight.bold),
@@ -65,9 +75,11 @@ class OrderDetailsScreen extends StatelessWidget {
                                         color: Colors.blue,
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(20))),
-                                    child: const Text(
-                                      'Delivery Man',
-                                      style: TextStyle(
+                                    child: Text(
+                                      homeProvider.loginResponseModel?.user
+                                          ?.roleType ??
+                                          'N/A',
+                                      style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: TextSize.smallText),
                                     ),
@@ -94,9 +106,9 @@ class OrderDetailsScreen extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
-                                '#S123 - Order Details',
-                                style: TextStyle(
+                              Text(
+                                '#S${orderModel.id} - Order Details',
+                                style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: TextSize.titleText,
                                     fontWeight: FontWeight.bold),
@@ -168,27 +180,28 @@ class OrderDetailsScreen extends StatelessWidget {
                         child: Row(children: [
                           Expanded(
                               child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const FittedBox(
-                                child: Text(': Mr. X Hacking',
-                                    style: TextStyle(
-                                        fontSize: TextSize.buttonText)),
-                              ),
-                              Text(': 09:35',
-                                  style: TextStyle(
-                                      fontSize: TextSize.smallText,
-                                      color: AppColor.secondaryTextColor)),
-                              Text(': COD',
-                                  style: TextStyle(
-                                      fontSize: TextSize.smallText,
-                                      color: AppColor.secondaryTextColor)),
-                              Text(': \$45',
-                                  style: TextStyle(
-                                      fontSize: TextSize.smallText,
-                                      color: AppColor.secondaryTextColor)),
-                            ],
-                          ))
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  FittedBox(
+                                    child: Text(': ${orderModel.customer ?? 'N/A'}',
+                                        style: const TextStyle(
+                                            fontSize: TextSize.buttonText)),
+                                  ),
+                                  Text(': 09:35',
+                                      style: TextStyle(
+                                          fontSize: TextSize.smallText,
+                                          color: AppColor.secondaryTextColor)),
+                                  Text(': COD',
+                                      style: TextStyle(
+                                          fontSize: TextSize.smallText,
+                                          color: AppColor.secondaryTextColor)),
+                                  Text(
+                                      ': ${orderModel.payment?.payable ?? 'N/A'} ৳',
+                                      style: TextStyle(
+                                          fontSize: TextSize.smallText,
+                                          color: AppColor.secondaryTextColor)),
+                                ],
+                              ))
                         ])),
 
                     ///Trailing
@@ -198,8 +211,8 @@ class OrderDetailsScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text('Pending Order\n',
-                                  style: TextStyle(
+                              Text('$orderType\n',
+                                  style: const TextStyle(
                                       fontSize: TextSize.extraSmallText)),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
@@ -231,13 +244,15 @@ class OrderDetailsScreen extends StatelessWidget {
                     ListView.separated(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: 4,
+                      itemCount: orderModel.orderDetl!.length,
                       separatorBuilder: (context, index)=>const SizedBox(height: 8),
-                      itemBuilder: (context, index)=>OrderDetailsTile(
-                          item: '0${index+1} Hamburger',
-                          quantity: '02',
-                          price: '\$ 4.00',
-                          total: '\$ 4.00'),
+                      itemBuilder: (context, index)=> OrderDetailsTile(
+                          item:
+                          '0${index + 1} ${orderModel.orderDetl![index].foodId}',
+                          quantity: '${orderModel.orderDetl![index].quantity}',
+                          price: '৳ ${orderModel.orderDetl![index].pricePerQty}',
+                          total: '৳ ${double.parse(orderModel.orderDetl![index].pricePerQty ?? '0.0')
+                              * double.parse(orderModel.orderDetl![index].quantity ?? '0.0')}'),
                     ),
                     const SizedBox(height: 32),
 
@@ -253,7 +268,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                 color: AppColor.secondaryTextColor,
                                 fontWeight: FontWeight.bold
                             )),
-                        Text('\$ 16.0',
+                        Text('৳ ${getTotalPrice()}',
                             textAlign: TextAlign.end,
                             style: TextStyle(
                                 fontSize: TextSize.bodyText,
@@ -281,5 +296,15 @@ class OrderDetailsScreen extends StatelessWidget {
         ],
       ),
     ));
+  }
+
+  double getTotalPrice() {
+    double price = 0.0;
+    for (OrderDetl element in orderModel.orderDetl!) {
+      price = price +
+          (double.parse(element.pricePerQty ?? '0.0') *
+              double.parse(element.quantity ?? '0.0'));
+    }
+    return price;
   }
 }
