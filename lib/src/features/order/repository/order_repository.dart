@@ -14,7 +14,9 @@ class OrderRepository {
     }, onSuccess: (response) async {
       debugPrint(response.body);
       var jsonData = jsonDecode(response.body);
-      result = orderListDataModelFromJson(jsonEncode(jsonData['data']));
+      if(jsonData['data']!=null && jsonData['data'].isNotEmpty){
+        result = orderListDataModelFromJson(jsonEncode(jsonData['data']));
+      }
     }, onError: (error) {
       debugPrint(error.message ?? 'Something went wrong');
     });

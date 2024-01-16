@@ -5,9 +5,15 @@ class ApiEndpoint {
   ///Auth
   static const String signIn = '/api/login';
   static const String signup = '/api/reg-delivery-boy';
+  ///Home
   static const String dashboard = '/api/delivery-boy/dashboard/';
   ///Order
-  static const String pendingOrder = '/api/owner/order-list/pending/';
-  static const String processingOrder = '/api/owner/order-list/processing/';
-  static const String completeOrder = '/api/owner/order-list/complete/';
+  static const String pendingOrderList = '/api/owner/order-list/pending/';
+  static const String processingOrderList = '/api/owner/order-list/processing/';
+  static const String completeOrderList = '/api/owner/order-list/complete/';
+
+  ///Order Action
+  static const String orderReady = '/api/owner/order/ready/';
+  static const String cancelOrder = '/api/owner/order/cancel/';
+  static const String processingOrder = '/api/owner/order/processing/';
 }

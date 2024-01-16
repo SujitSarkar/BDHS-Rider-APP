@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:intl/intl.dart';
+
 List<OrderListDataModel> orderListDataModelFromJson(String str) => List<OrderListDataModel>.from(json.decode(str).map((x) => OrderListDataModel.fromJson(x)));
 
 class OrderListDataModel {
@@ -56,12 +58,16 @@ class OrderDetl {
   final String? userId;
   final String? quantity;
   final String? pricePerQty;
+  final DateTime? orderDate;
+  final String? orderTime;
 
   OrderDetl({
     this.foodId,
     this.userId,
     this.quantity,
     this.pricePerQty,
+    this.orderDate,
+    this.orderTime
   });
 
   factory OrderDetl.fromJson(Map<String, dynamic> json) => OrderDetl(
@@ -69,6 +75,9 @@ class OrderDetl {
     userId: json["user_id"],
     quantity: json["quantity"],
     pricePerQty: json["price_per_qty"],
+      orderDate: DateFormat('dd-MM-yyyy HH:mm:ss')
+          .parse("${json["order_date"]} ${json["order_time"]}"),
+      orderTime: json["order_time"]
   );
 }
 
