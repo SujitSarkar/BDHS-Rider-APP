@@ -1,4 +1,5 @@
 import 'package:bdhs_rider_app/shared/push_notification_service/firebase_push_api_service.dart';
+import 'package:bdhs_rider_app/src/features/profile/provider/profile_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
               create: (_) => AuthenticationProvider()),
           ChangeNotifierProvider<HomeProvider>(create: (_) => HomeProvider()),
           ChangeNotifierProvider<OrderProvider>(create: (_) => OrderProvider()),
+          ChangeNotifierProvider<ProfileProvider>(create: (_) => ProfileProvider()),
         ],
         child: MaterialApp(
           navigatorKey: AppNavigatorKey.key,

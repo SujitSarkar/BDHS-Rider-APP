@@ -4,6 +4,7 @@ import '../../src/features/authentication/view/signup_screen.dart';
 import '../../src/features/home/screen/home_screen.dart';
 import '../../src/features/order/screen/order_details_screen.dart';
 import '../../src/features/order/screen/order_list_screen.dart';
+import '../../src/features/profile/view/profile_screen.dart';
 import '../../src/features/splash/splash_screen.dart';
 import '../widgets/no_internet_screen.dart';
 import 'app_router.dart';
@@ -56,6 +57,13 @@ class GeneratedRoute {
                   orderModel: arguments.orderModel,
                   orderType: arguments.orderType,
                 ));
+
+      case AppRouter.profile:
+        return PageRouteBuilder(
+            settings: settings,
+            transitionsBuilder: slideTransition,
+            pageBuilder: (_, animation, secondaryAnimation) =>
+            const ProfileScreen());
 
       case AppRouter.noInternet:
         return PageRouteBuilder(
