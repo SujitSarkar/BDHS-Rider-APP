@@ -44,10 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           ///Header
           InkWell(
-            onTap: ()async{
-              AuthRepository authRepo = AuthRepository();
-              await authRepo.logout();
-            },
+            onTap: ()=> Navigator.pushNamed(context, AppRouter.profile),
             child: Stack(
               children: [
                 Image.asset(
