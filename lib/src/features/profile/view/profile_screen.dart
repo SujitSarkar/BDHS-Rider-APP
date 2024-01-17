@@ -53,7 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Stack(
             children: [
               Image.asset(
-                'assets/images/login_header_bg.jpg',
+                'assets/images/rider.jpg',
                 width: size.width,
                 height: size.height * .25,
                 fit: BoxFit.cover,

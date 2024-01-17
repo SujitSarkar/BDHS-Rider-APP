@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      homeProvider.loginResponseModel?.user?.name??'N/A',
+                                      '${homeProvider.loginResponseModel?.user?.name??'N/A'}',
                                       style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: TextSize.bodyText,
