@@ -47,16 +47,4 @@ class AuthRepository {
           (route) => false);
     });
   }
-
-  Future<String?> generateUserToken() async {
-    try {
-      final FirebaseMessaging fcm = FirebaseMessaging.instance;
-      final fcmToken = await fcm.getToken();
-      debugPrint('Device Token: $fcmToken');
-      return fcmToken!;
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-    return null;
-  }
 }
